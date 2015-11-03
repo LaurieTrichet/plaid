@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 // query git for the the SHA, Tag and commit count. Use these to automate versioning.
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -24,7 +25,7 @@ def gitCommitCount =
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '22.0.1'
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "io.plaidapp"
@@ -51,14 +52,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 repositories {
     jcenter()
+    mavenCentral()
 }
 
 ext {
-    archivesBaseName = "plaid-${android.defaultConfig.versionName}"
     supportLibVersion = '23.1.0'
 }
 
@@ -76,4 +80,19 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile project(':bypass')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.anko:anko-sdk21:$anko_version"
+    compile "org.jetbrains.anko:anko-support-v4:$anko_version"
+
+}
+buildscript {
+    ext.kotlin_version = '1.0.0-beta-1103'
+    ext.anko_version = '0.7.2'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+    }
 }
