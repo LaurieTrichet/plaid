@@ -73,11 +73,11 @@ public abstract class DataManager extends BaseDataManager
 
     @Override
     public void onFiltersChanged(Source changedFilter){
-        if (changedFilter.active) {
+        if (changedFilter.getActive()) {
             loadSource(changedFilter);
         } else {
             // clear the page index for the source
-            pageIndexes.put(changedFilter.key, 0);
+            pageIndexes.put(changedFilter.getKey(), 0);
         }
     }
 
@@ -85,10 +85,10 @@ public abstract class DataManager extends BaseDataManager
     public void onFilterRemoved(Source removed) { } // no-op
 
     private void loadSource(Source source) {
-        if (source.active) {
+        if (source.getActive()) {
             loadingCount.incrementAndGet();
-            int page = getNextPageIndex(source.key);
-            switch (source.key) {
+            int page = getNextPageIndex(source.getKey());
+            switch (source.getKey()) {
                 case SourceManager.SOURCE_DESIGNER_NEWS_POPULAR:
                     loadDesignerNewsTopStories(page);
                     break;
@@ -134,7 +134,7 @@ public abstract class DataManager extends BaseDataManager
         List<Source> dateSources = filterAdapter.getFilters();
         pageIndexes = new HashMap<>(dateSources.size());
         for (Source source : dateSources) {
-            pageIndexes.put(source.key, 0);
+            pageIndexes.put(source.getKey(), 0);
         }
     }
 
@@ -195,12 +195,12 @@ public abstract class DataManager extends BaseDataManager
 
     private void loadDesignerNewsSearch(final Source.DesignerNewsSearchSource source,
                                         final int page) {
-        getDesignerNewsApi().search(source.query, page, new Callback<StoriesResponse>() {
+        getDesignerNewsApi().search(source.getQuery(), page, new Callback<StoriesResponse>() {
             @Override
             public void success(StoriesResponse storiesResponse, Response response) {
                 if (storiesResponse != null) {
                     setPage(storiesResponse.stories, page);
-                    setDataSource(storiesResponse.stories, source.key);
+                    setDataSource(storiesResponse.stories, source.getKey());
                     onDataLoaded(storiesResponse.stories);
                 }
                 loadingCount.decrementAndGet();
@@ -383,14 +383,14 @@ public abstract class DataManager extends BaseDataManager
         new AsyncTask<Void, Void, List<Shot>>() {
             @Override
             protected List<Shot> doInBackground(Void... params) {
-                return DribbbleSearch.search(source.query, DribbbleSearch.SORT_RECENT, page);
+                return DribbbleSearch.search(source.getQuery(), DribbbleSearch.SORT_RECENT, page);
             }
 
             @Override
             protected void onPostExecute(List<Shot> shots) {
-                if (shots != null && shots.size() > 0 && sourceIsEnabled(source.key)) {
+                if (shots != null && shots.size() > 0 && sourceIsEnabled(source.getKey())) {
                     setPage(shots, page);
-                    setDataSource(shots, source.key);
+                    setDataSource(shots, source.getKey());
                     onDataLoaded(shots);
                 }
                 loadingCount.decrementAndGet();

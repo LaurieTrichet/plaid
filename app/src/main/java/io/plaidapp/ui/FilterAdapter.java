@@ -87,10 +87,10 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         for (int i = 0; i < count; i++) {
             Source existing = filters.get(i);
             if (existing.getClass() == toAdd.getClass()
-                    && existing.key.equalsIgnoreCase(toAdd.key)) {
+                    && existing.getKey().equalsIgnoreCase(toAdd.getKey())) {
                 // already exists, just ensure it's active
-                if (!existing.active) {
-                    existing.active = true;
+                if (!existing.getActive()) {
+                    existing.setActive(true);
                     dispatchFiltersChanged(existing);
                     notifyItemChanged(i);
                     SourceManager.updateSource(existing, context);
@@ -123,9 +123,9 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         final int count = filters.size();
         for (int i = 0; i < count; i++) {
             Source filter = filters.get(i);
-            if (filter.key.equals(key)) {
-                if (!filter.active) {
-                    filter.active = true;
+            if (filter.getKey().equals(key)) {
+                if (!filter.getActive()) {
+                    filter.setActive(true);
                     notifyItemChanged(i);
                     dispatchFiltersChanged(filter);
                     SourceManager.updateSource(filter, context);
@@ -145,12 +145,12 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     public void onBindViewHolder(final FilterViewHolder vh, final int position) {
         final Source filter = filters.get(position);
         vh.isSwipeable = filter.isSwipeDismissable();
-        vh.filterName.setText(filter.name);
-        vh.filterName.setEnabled(filter.active);
-        if (filter.iconRes > 0) {
-            vh.filterIcon.setImageDrawable(vh.itemView.getContext().getDrawable(filter.iconRes));
+        vh.filterName.setText(filter.getName());
+        vh.filterName.setEnabled(filter.getActive());
+        if (filter.getIconRes() > 0) {
+            vh.filterIcon.setImageDrawable(vh.itemView.getContext().getDrawable(filter.getIconRes()));
         }
-        vh.filterIcon.setImageAlpha(filter.active ? FILTER_ICON_ENABLED_ALPHA :
+        vh.filterIcon.setImageAlpha(filter.getActive() ? FILTER_ICON_ENABLED_ALPHA :
                 FILTER_ICON_DISABLED_ALPHA);
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +161,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                 } else {
                     vh.itemView.setHasTransientState(true);
                     ObjectAnimator fade = ObjectAnimator.ofInt(vh.filterIcon, ViewUtils.IMAGE_ALPHA,
-                            filter.active ? FILTER_ICON_DISABLED_ALPHA : FILTER_ICON_ENABLED_ALPHA);
+                            filter.getActive() ? FILTER_ICON_DISABLED_ALPHA : FILTER_ICON_ENABLED_ALPHA);
                     fade.setDuration(300);
                     fade.setInterpolator(AnimationUtils.loadInterpolator(vh.itemView.getContext()
                             , android.R.interpolator.fast_out_slow_in));
@@ -172,8 +172,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                         }
                     });
                     fade.start();
-                    filter.active = !filter.active;
-                    vh.filterName.setEnabled(filter.active);
+                    filter.setActive(!filter.getActive());
+                    vh.filterName.setEnabled(filter.getActive());
                     notifyItemChanged(position);
                     SourceManager.updateSource(filter, vh.itemView.getContext());
                     dispatchFiltersChanged(filter);
@@ -189,13 +189,13 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
     @Override
     public long getItemId(int position) {
-        return filters.get(position).key.hashCode();
+        return filters.get(position).getKey().hashCode();
     }
 
     private boolean isAuthorisedDribbbleSource(Source source) {
-        return source.key.equals(SourceManager.SOURCE_DRIBBBLE_FOLLOWING)
-                || source.key.equals(SourceManager.SOURCE_DRIBBBLE_USER_LIKES)
-                || source.key.equals(SourceManager.SOURCE_DRIBBBLE_USER_SHOTS);
+        return source.getKey().equals(SourceManager.SOURCE_DRIBBBLE_FOLLOWING)
+                || source.getKey().equals(SourceManager.SOURCE_DRIBBBLE_USER_LIKES)
+                || source.getKey().equals(SourceManager.SOURCE_DRIBBBLE_USER_SHOTS);
     }
 
     @Override
@@ -209,7 +209,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     public int getEnabledSourcesCount() {
         int count = 0;
         for (Source source : filters) {
-            if (source.active) {
+            if (source.getActive()) {
                 count++;
             }
         }
@@ -295,8 +295,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     public void onDribbbleLogout() {
         boolean changed = false;
         for (Source filter : filters) {
-            if (filter.active && isAuthorisedDribbbleSource(filter)) {
-                filter.active = false;
+            if (filter.getActive() && isAuthorisedDribbbleSource(filter)) {
+                filter.setActive(false);
                 SourceManager.updateSource(filter, context);
                 dispatchFiltersChanged(filter);
                 changed = true;

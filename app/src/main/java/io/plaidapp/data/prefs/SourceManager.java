@@ -80,16 +80,16 @@ public class SourceManager {
         SharedPreferences prefs = context.getSharedPreferences(SOURCES_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Set<String> sourceKeys = prefs.getStringSet(KEY_SOURCES, null);
-        sourceKeys.add(toAdd.key);
+        sourceKeys.add(toAdd.getKey());
         editor.putStringSet(KEY_SOURCES, sourceKeys);
-        editor.putBoolean(toAdd.key, toAdd.active);
+        editor.putBoolean(toAdd.getKey(), toAdd.getActive());
         editor.apply();
     }
 
     public static void updateSource(Source source, Context context) {
         SharedPreferences.Editor editor =
                 context.getSharedPreferences(SOURCES_PREF, Context.MODE_PRIVATE).edit();
-        editor.putBoolean(source.key, source.active);
+        editor.putBoolean(source.getKey(), source.getActive());
         editor.apply();
     }
 
@@ -97,9 +97,9 @@ public class SourceManager {
         SharedPreferences prefs = context.getSharedPreferences(SOURCES_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Set<String> sourceKeys = prefs.getStringSet(KEY_SOURCES, null);
-        sourceKeys.remove(source.key);
+        sourceKeys.remove(source.getKey());
         editor.putStringSet(KEY_SOURCES, sourceKeys);
-        editor.remove(source.key);
+        editor.remove(source.getKey());
         editor.apply();
     }
 
@@ -107,8 +107,8 @@ public class SourceManager {
         ArrayList<Source> defaultSources = getDefaultSources(context);
         Set<String> keys = new HashSet<>(defaultSources.size());
         for (Source source : defaultSources) {
-            keys.add(source.key);
-            editor.putBoolean(source.key, source.active);
+            keys.add(source.getKey());
+            editor.putBoolean(source.getKey(), source.getActive());
         }
         editor.putStringSet(KEY_SOURCES, keys);
         editor.commit();
@@ -116,8 +116,8 @@ public class SourceManager {
 
     private static @Nullable Source getSource(Context context, String key, boolean active) {
         for (Source source : getDefaultSources(context)) {
-            if (source.key.equals(key)) {
-                source.active = active;
+            if (source.getKey().equals(key)) {
+                source.setActive(active);
                 return source;
             }
         }
