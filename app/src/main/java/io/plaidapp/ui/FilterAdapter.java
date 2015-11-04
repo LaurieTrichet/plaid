@@ -93,7 +93,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                     existing.setActive(true);
                     dispatchFiltersChanged(existing);
                     notifyItemChanged(i);
-                    SourceManager.updateSource(existing, context);
+                    SourceManager.INSTANCE.updateSource(existing, context);
                 }
                 return false;
             }
@@ -103,7 +103,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         Collections.sort(filters, new Source.SourceComparator());
         dispatchFiltersChanged(toAdd);
         notifyDataSetChanged();
-        SourceManager.addSource(toAdd, context);
+        SourceManager.INSTANCE.addSource(toAdd, context);
         return true;
     }
 
@@ -112,7 +112,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         filters.remove(position);
         notifyItemRemoved(position);
         dispatchFilterRemoved(removing);
-        SourceManager.removeSource(removing, context);
+        SourceManager.INSTANCE.removeSource(removing, context);
     }
 
     public int getFilterPosition(Source filter) {
@@ -128,7 +128,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                     filter.setActive(true);
                     notifyItemChanged(i);
                     dispatchFiltersChanged(filter);
-                    SourceManager.updateSource(filter, context);
+                    SourceManager.INSTANCE.updateSource(filter, context);
                     return;
                 }
             }
@@ -175,7 +175,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                     filter.setActive(!filter.getActive());
                     vh.filterName.setEnabled(filter.getActive());
                     notifyItemChanged(position);
-                    SourceManager.updateSource(filter, vh.itemView.getContext());
+                    SourceManager.INSTANCE.updateSource(filter, vh.itemView.getContext());
                     dispatchFiltersChanged(filter);
                 }
             }
@@ -297,7 +297,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         for (Source filter : filters) {
             if (filter.getActive() && isAuthorisedDribbbleSource(filter)) {
                 filter.setActive(false);
-                SourceManager.updateSource(filter, context);
+                SourceManager.INSTANCE.updateSource(filter, context);
                 dispatchFiltersChanged(filter);
                 changed = true;
             }

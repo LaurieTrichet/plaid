@@ -88,44 +88,44 @@ public abstract class DataManager extends BaseDataManager
         if (source.getActive()) {
             loadingCount.incrementAndGet();
             int page = getNextPageIndex(source.getKey());
-            switch (source.getKey()) {
-                case SourceManager.SOURCE_DESIGNER_NEWS_POPULAR:
-                    loadDesignerNewsTopStories(page);
-                    break;
-                case SourceManager.SOURCE_DESIGNER_NEWS_RECENT:
-                    loadDesignerNewsRecent(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_POPULAR:
-                    loadDribbblePopular(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_FOLLOWING:
-                    loadDribbbleFollowing(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_USER_LIKES:
-                    loadDribbbleUserLikes(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_USER_SHOTS:
-                    loadDribbbleUserShots(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_RECENT:
-                    loadDribbbleRecent(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_DEBUTS:
-                    loadDribbbleDebuts(page);
-                    break;
-                case SourceManager.SOURCE_DRIBBBLE_ANIMATED:
-                    loadDribbbleAnimated(page);
-                    break;
-                case SourceManager.SOURCE_PRODUCT_HUNT:
-                    loadProductHunt(page);
-                    break;
-                default:
-                    if (source instanceof Source.DribbbleSearchSource) {
-                        loadDribbbleSearch((Source.DribbbleSearchSource) source, page);
-                    } else if (source instanceof Source.DesignerNewsSearchSource) {
-                        loadDesignerNewsSearch((Source.DesignerNewsSearchSource) source, page);
-                    }
-                    break;
+            String s = source.getKey();
+            if (s.equals(SourceManager.SOURCE_DESIGNER_NEWS_POPULAR)) {
+                loadDesignerNewsTopStories(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DESIGNER_NEWS_RECENT)) {
+                loadDesignerNewsRecent(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_POPULAR)) {
+                loadDribbblePopular(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_FOLLOWING)) {
+                loadDribbbleFollowing(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_USER_LIKES)) {
+                loadDribbbleUserLikes(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_USER_SHOTS)) {
+                loadDribbbleUserShots(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_RECENT)) {
+                loadDribbbleRecent(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_DEBUTS)) {
+                loadDribbbleDebuts(page);
+
+            } else if (s.equals(SourceManager.SOURCE_DRIBBBLE_ANIMATED)) {
+                loadDribbbleAnimated(page);
+
+            } else if (s.equals(SourceManager.SOURCE_PRODUCT_HUNT)) {
+                loadProductHunt(page);
+
+            } else {
+                if (source instanceof Source.DribbbleSearchSource) {
+                    loadDribbbleSearch((Source.DribbbleSearchSource) source, page);
+                } else if (source instanceof Source.DesignerNewsSearchSource) {
+                    loadDesignerNewsSearch((Source.DesignerNewsSearchSource) source, page);
+                }
+
             }
         }
     }
