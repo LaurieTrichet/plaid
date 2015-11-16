@@ -119,7 +119,7 @@ class HomeActivity : Activity() {
 
     private val dataManager by lazy {
         object : DataManager(this, filtersAdapter) {
-            override fun onDataLoaded(data: MutableList<out PlaidItem>?) {
+            override fun onDataLoaded(data: List<PlaidItem>) {
                 feedAdapter.addAndResort(data)
                 checkEmptyState()
             }

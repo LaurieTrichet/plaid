@@ -107,5 +107,4 @@
         android:scrollbarStyle="outsideOverlay"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:listitem="@layout/filter_item" />
-
 </android.support.v4.widget.DrawerLayout>
